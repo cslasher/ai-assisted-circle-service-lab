@@ -74,6 +74,14 @@ export default function App() {
             style={{ marginLeft: 8, padding: "4px 8px", width: 80 }}
           />
         </label>
+        <input
+            type="range"
+            min={MIN_RADIUS}
+            max={MAX_RADIUS}
+            value={Number(input) || MIN_RADIUS}
+            onChange={(e) => setInput(e.target.value)}
+            style={{ width: 200 }}
+          />
         {error && <span style={{ color: "red", fontSize: 14 }}>{error}</span>}
       </div>
 
