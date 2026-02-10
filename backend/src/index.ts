@@ -43,6 +43,14 @@ app.post("/api/color", (req, res) => {
   res.json({ color });
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Backend running on http://localhost:${PORT}`);
 });
+
+function shutdown() {
+  console.log("\nShutting down gracefully…");
+  server.close(() => process.exit(0));
+}
+
+process.on("SIGTERM", shutdown);
+process.on("SIGINT", shutdown);
