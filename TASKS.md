@@ -1,0 +1,6 @@
+- [ ] Frontend: input + bounds validation + error message
+- [ ] Frontend: calls POST /api/color and draws centered circle
+- [ ] Backend: validates radius and returns { color }
+- [ ] Backend: never returns #FFFFFF
+- [ ] CORS works locally
+- [ ] Run steps documented
