@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-const API_URL = "http://localhost:4000/api/color";
+const API_URL = "/api/color";
 const MIN_RADIUS = 1;
 const MAX_RADIUS = 200;
 const DEBOUNCE_MS = 300;
