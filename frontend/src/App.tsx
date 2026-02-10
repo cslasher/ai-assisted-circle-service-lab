@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const API_URL = "http://localhost:4000/api/color";
 const MIN_RADIUS = 1;
 const MAX_RADIUS = 200;
+const DEBOUNCE_MS = 300;
 
 function validate(value: string): string | null {
-  if (value.trim() === "") return "Radius is required";
+  if (value.trim() === "") return null; // empty is OK, just no circle
   const n = Number(value);
   if (isNaN(n)) return "Must be a number";
   if (n < 0) return "Cannot be negative";
@@ -19,36 +20,46 @@ export default function App() {
   const [input, setInput] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [circle, setCircle] = useState<{ radius: number; color: string } | null>(null);
-  const [loading, setLoading] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  async function handleSubmit() {
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+
     const err = validate(input);
     if (err) {
       setError(err);
       return;
     }
-    setError(null);
-    setLoading(true);
-
-    try {
-      const res = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ radius: Number(input) }),
-      });
-      if (!res.ok) {
-        const body = await res.json();
-        setError(body.error || "Server error");
-        return;
-      }
-      const { color } = await res.json();
-      setCircle({ radius: Number(input), color });
-    } catch {
-      setError("Cannot reach backend");
-    } finally {
-      setLoading(false);
+    if (input.trim() === "") {
+      setError(null);
+      setCircle(null);
+      return;
     }
-  }
+
+    setError(null);
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ radius: Number(input) }),
+        });
+        if (!res.ok) {
+          const body = await res.json();
+          setError(body.error || "Server error");
+          return;
+        }
+        const { color } = await res.json();
+        setCircle({ radius: Number(input), color });
+      } catch {
+        setError("Cannot reach backend");
+      }
+    }, DEBOUNCE_MS);
+
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [input]);
 
   return (
     <div style={{ margin: 0, background: "#fff", minHeight: "100vh", fontFamily: "sans-serif" }}>
@@ -59,17 +70,10 @@ export default function App() {
           <input
             type="text"
             value={input}
-            onChange={(e) => {
-              setInput(e.target.value);
-              setError(null);
-            }}
-            onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+            onChange={(e) => setInput(e.target.value)}
             style={{ marginLeft: 8, padding: "4px 8px", width: 80 }}
           />
         </label>
-        <button onClick={handleSubmit} disabled={loading}>
-          {loading ? "Loading…" : "Draw"}
-        </button>
         {error && <span style={{ color: "red", fontSize: 14 }}>{error}</span>}
       </div>
 
