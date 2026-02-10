@@ -81,6 +81,16 @@ npm run dev
 
 Open **http://localhost:5173** in your browser.
 
+### Environment Variables
+
+| Variable       | Default | Used by  | Description                    |
+| -------------- | ------- | -------- | ------------------------------ |
+| `PORT`         | `4000`  | Backend  | Express server listen port     |
+| `PORT`         | `5173`  | Frontend | Vite dev server port           |
+| `BACKEND_PORT` | `4000`  | Frontend | Proxy target for `/api` routes |
+
+Example: `PORT=5000 npm run dev` in the backend folder starts it on port 5000.
+
 ## API
 
 ### `POST /api/color`
@@ -118,8 +128,9 @@ Both the frontend and backend enforce these rules.
 
 ## Manual Test Checklist
 
-1. Enter `50`, click **Draw** — a colored circle appears centered on the page.
-2. Enter `50` again — the same color is returned (deterministic).
-3. Enter `1` and `200` — both render correctly within the viewport.
-4. Enter `-5`, `abc`, `0`, or `201` — a red inline error appears and no request is sent.
-5. Stop the backend, then click **Draw** — a "Cannot reach backend" error appears.
+1. Type `50` in the text input — circle appears automatically after a short debounce (no button needed).
+2. Drag the slider — circle resizes and recolors live as you drag.
+3. Type `50` again — same color as before (deterministic). Hex code is shown below the circle.
+4. Enter `1` and `200` — both render correctly within the viewport.
+5. Enter `-5`, `abc`, `0`, or `201` — a red inline error appears and no request is sent.
+6. Stop the backend, then change the radius — a "Cannot reach backend" error appears.
