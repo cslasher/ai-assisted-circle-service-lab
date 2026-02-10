@@ -95,14 +95,17 @@ export default function App() {
         }}
       >
         {circle && (
-          <div
-            style={{
-              width: circle.radius * 2,
-              height: circle.radius * 2,
-              borderRadius: "50%",
-              backgroundColor: circle.color,
-            }}
-          />
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+            <div
+              style={{
+                width: circle.radius * 2,
+                height: circle.radius * 2,
+                borderRadius: "50%",
+                backgroundColor: circle.color,
+              }}
+            />
+            <code style={{ fontSize: 14, color: "#555" }}>{circle.color}</code>
+          </div>
         )}
       </div>
     </div>
