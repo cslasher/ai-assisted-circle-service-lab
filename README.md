@@ -134,3 +134,23 @@ Both the frontend and backend enforce these rules.
 4. Enter `1` and `200` — both render correctly within the viewport.
 5. Enter `-5`, `abc`, `0`, or `201` — a red inline error appears and no request is sent.
 6. Stop the backend, then change the radius — a "Cannot reach backend" error appears.
+
+## What I’d Tighten for Production
+
+This project is intentionally minimal and optimized for demonstrating AI-assisted development and frontend/backend contract alignment.
+
+If this were taken beyond a demo, the following areas would be addressed:
+
+- **Rate limiting**
+  - Protect the API endpoint from abuse (e.g. IP-based or token-based limits).
+
+- **Schema validation**
+  - Introduce a shared schema (e.g. Zod) to validate request/response payloads consistently on both frontend and backend.
+
+- **Authentication boundary**
+  - Add a clear auth layer (even if permissive) to define trust boundaries between client and service.
+
+- **Observability**
+  - Structured logging, basic metrics, and request tracing to support debugging and operational visibility.
+
+These were intentionally left out to keep the example focused and small.
